@@ -1,19 +1,4 @@
-# ML-PHW2
 
-## You can use clustering algorithms
-+ K-means
-+ EM(GMM)
-+ CLARANS
-+ DBSCAN
-+ etc.
-## [Code with User Manual](https://github.com/gochangin-ai/ML-PHW2/blob/main/README.md#code-with-user-manual) <
-## [Results](https://github.com/gochangin-ai/ML-PHW2/blob/main/README.md#results) <
-
-
-# Code With User Manual
-## Importing necessary libraries
-#### Make sure that you have all these libaries available to run the code successfully
-```python
 import numpy as np
 import pandas as pd
 from sklearn import datasets
@@ -36,14 +21,14 @@ import matplotlib.pyplot as plt
 import warnings
 from pandas.core.common import SettingWithCopyWarning
 warnings.simplefilter(action="ignore", category=SettingWithCopyWarning)
-```
 
 
-## DataPreprocessing
-### Drop oncean proximity columns
-#### Parameter : df   |  DataFrame of Housing dataset
+# # DataProcessing(df)  
+# ## remove column ( ocean_proximity ) from df_numeric
 
-```python
+
+
+
 def DataProcessing(df):
 
     #Drop nan
@@ -53,14 +38,17 @@ def DataProcessing(df):
     
 
     return df_numeric, df_cat
-```
 
-## DataScaling
-### get scaler lists and scaling dataframe
-#### Parameter : df   |  DataFrame of Housing dataset
-####             scalers  |  Scalers that you want to use
 
-```python
+# # DataScaling(df,scalers)
+# ## get encoder lists and encoding dataframe
+# 
+# ### parameters : df, {DataFrame} data frame that you want to scale
+# ###                       scalers, {Scaler} Scalers that you want to use
+
+
+
+
 def DataScaling(df, scalers):
     df_scaled_list = []
     
@@ -70,13 +58,18 @@ def DataScaling(df, scalers):
         df_scaled_list.append(pd.DataFrame(data = data_scaled, columns=df.columns))
     
     return df_scaled_list
-```
-## DataEncoding
-###  Get encoder lists and encoding dataframe
+    
 
-#### Parameter :df | data frame that you want to scale
-####            encoders | get encoders that you want to use
-```python
+
+# #  DataEncoding(df,encoders)
+# ## get scaler lists and scaling dataframe
+# 
+# ### parameters : df, {DataFrame} data frame that you want to scale
+# ###                       scalers, {encoders} encoders that you want to use
+
+
+
+
 def DataEncoding(df, encoders):
     df_encoded_list = []
     
@@ -89,14 +82,18 @@ def DataEncoding(df, encoders):
     
         
     return df_encoded_list, encoder.classes_
-```
+    
 
 
-##  DfConcat
-### get encoded and scaled dataframe and concatenate with various mix
-#### parameters : df_numeric_scaled | DataFrame data frame that scaled
-####                       df_cat_encoded | DataFrame encoders that encoded
-```python
+# #  DfConcat(df_numeric_scaled, df_cat_encoded)
+# ## get encoded and scaled dataframe and concatenate with various mix
+# 
+# ### parameters : df_numeric_scaled, {DataFrame} data frame that scaled
+# ###                       df_cat_encoded, {DataFrame} encoders that encoded
+
+
+
+
 def DfConcat(df_numeric_scaled, df_cat_encoded):
     df_list = []
     
@@ -105,15 +102,15 @@ def DfConcat(df_numeric_scaled, df_cat_encoded):
             df_list.append(pd.concat([i,j],axis = 1))
     
     return df_list
-```
 
 
-## clusterToIdx(clusters,ratio)
-### make index lists for CLARANS
-#### parameters : clusters | get clusters
-####              ratio  | ratio that how many data to use
+# # clusterToIdx(clusters,ratio)
+# ## make index lists for CLARANS
+# 
 
-```python
+
+
+
 def clusterToIdx(clusters,ratio):
     idx_list = [-1 for i in range(ratio)]
     idx = 0
@@ -124,23 +121,26 @@ def clusterToIdx(clusters,ratio):
         idx = idx + 1
 
     return idx_list
-```
 
 
-## show_pairplot
-### Display pairplot of dataframe
-#### Parameter :df | data frame that show pairplot
+# # show_pairplot(df)
+# ## make pairplot of dataframe
 
-```python
+
+
+
 def show_pairplot(df):
     sns.pairplot(df, hue = 'cluster')
     plt.show()
-```
-## cal_corr
-### calculate correlation and select dataframe and show heatmap
-#### Parameter :df | data frame that you want to calculate correlation
 
-```python
+
+# # cal_corr(df)
+# ## calculate correlation of each columns 
+# ## and return dataframe that selected
+
+
+
+
 def cal_corr(df):
     corr = df.corr()
     plt.figure(figsize=(10,10))
@@ -159,43 +159,43 @@ def cal_corr(df):
     df_select = df[[s_list[0][0],s_list[0][1]]] #select two features with the strongest correlation each other
 
     return df_select
-```
-## purity_score
-### compute purity score 
-#### Parameter : y_true | y groundtruth value
-#### y_pred | predicted y value
 
 
-```python
+# # purity_score(y_true, y_pred):
+# ## compute purity score 
+# 
+# 
+# # makeplot(title, y_list, x_list):
+# ## make plot for scores (elbow,  silhouette, purity ) 
+
+
+
+
 def purity_score(y_true, y_pred):
     # compute contingency matrix (also called confusion matrix)
     contingency_matrix = metrics.cluster.contingency_matrix(y_true, y_pred)
     # return purity
     return np.sum(np.amax(contingency_matrix, axis=0)) / np.sum(contingency_matrix) 
-```
-## makeplot
-### make plot for scores (elbow,  silhouette, purity ) 
-#### parameter : title | title name of plot
-#### y_list | y_list for plot
-#### x_list | x_list for plot
-
-```python 
 def makeplot(title, y_list, x_list):
     plt.plot(x_list, y_list, label =title, marker = 'o')
     plt.title(title)
     plt.legend(bbox_to_anchor=(1.05, 1.0), loc="upper left")
     plt.tight_layout()
     plt.show()
-```
 
 
-## AutoML
-### train model & plot result
-#### parameters : df_list | {DataFrame} data frame list that will be used
-####              models | {list} models that will be used
-####              ratio | sample size ratio for CLARANS
-####              DBSCAN_list | EPS and min_sample for DBSCAN parameter
-```python
+# 
+# # AutoML (df_list, models, ratio,DBSCAN_list)
+# ## train model & plot result
+# 
+# ### parameters : df_list, {DataFrame} data frame list that will be used
+# ###                       models, {list} models that will be used
+# ###                       ratio, sample size ratio for CLARANS
+# ###                       DBSCAN_list, EPS and min_sample for DBSCAN parameter
+
+
+
+
 def AutoML(df_list, models, ratio, DBSCAN_list):
   for i, df in enumerate(df_list):
     print(df_list_type[i])
@@ -342,16 +342,15 @@ def AutoML(df_list, models, ratio, DBSCAN_list):
 
       print("==========")
         
-```
 
 
 
 
 
-## main code 
-###  Load housing csv data and set variables n_cluster , DBSCAN_list ( eps,min_sample ) etc.
+#main
 
-```python
+
+
 print("=== 1. Data Load & Missing Data check")
 df = pd.read_csv('housing.csv')
 
@@ -392,29 +391,11 @@ df_list_type = ['SS & LE', 'SS & d', 'MMS & LE', 'MMS & d','RS & LE', 'RS & d' ]
 models = ['KMeans()','GaussianMixture()','clarans()','DBSCAN()']
 
 AutoML(df_list, models, ratio, DBSCAN_list)
-```
 
 
-# Results
 
-![텍스트](result/image1.png)
-![텍스트](result/image2.png)
-![텍스트](result/image3.png)
-![텍스트](result/image4.png)
-![텍스트](result/image5.png)
-![텍스트](result/image6.png)
-![텍스트](result/image7.png)
-![텍스트](result/image8.png)
-![텍스트](result/image9.png)
-![텍스트](result/image10.png)
-![텍스트](result/image11.png)
-![텍스트](result/image12.png)
-![텍스트](result/image13.png)
-![텍스트](result/image14.png)
-![텍스트](result/image15.png)
-![텍스트](result/image16.png)
-![텍스트](result/image17.png)
-![텍스트](result/image18.png)
-![텍스트](result/image19.png)
-![텍스트](result/image20.png)
-## More results on result folder ! 
+
+
+
+
+
